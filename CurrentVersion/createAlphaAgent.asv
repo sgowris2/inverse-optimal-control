@@ -1,0 +1,6 @@
+function [arrivalRateAgent] = createAgentArrival(stdDev)
+
+global arrivalRate;
+
+arrivalRateAgent = arrivalRate + (arrivalRa);
+
