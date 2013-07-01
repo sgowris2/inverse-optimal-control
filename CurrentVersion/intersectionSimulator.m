@@ -24,8 +24,11 @@ phaseSets{6} = [3,4];           % Contains the indices of the links that have a 
 phaseSets{7} = [5,6];           % Contains the indices of the links that have a green in phase 7
 phaseSets{8} = [7,8];           % Contains the indices of the links that have a green in phase 8
 
-arrivalMeans = [0.2 0.05 0.2 0.05 0.2 0.05 0.2 0.05];   % The mean arrival rate for the normal distribution from which arrival rates are chosen for each link
-arrivalStdDev = [0.1 0.01 0.1 0.01 0.1 0.01 0.1 0.01];  % The standard deviation of arrivals for the normal distribution from which arrival rates are chosen for each link
+departureStdDev = zeros(noOfLinks);
+arrivalStdDev = zeros(noOfLinks);
+
+arrivalMeans = [0.2 0.1 0.2 0.1 0.2 0.1 0.2 0.1];   % The mean arrival rate for the normal distribution from which arrival rates are chosen for each link
+%arrivalStdDev = [0.1 0.01 0.1 0.01 0.1 0.01 0.1 0.01];  % The standard deviation of arrivals for the normal distribution from which arrival rates are chosen for each link
 departureMeans = [0.3 0.3 0.3 0.3 0.3 0.3 0.3 0.3]; % The mean departure rate for the normal distribution from which departure rates are chosen for each link
 
 minPhaseLengths = [5 5 5 5 5 5 5 5];    % Minimum phase lengths for the corresponding phases
@@ -35,8 +38,6 @@ rightTurnFraction = 0.3;        % Change this fraction to change the fraction of
 
 %%%%% IF YOU WANT TO CHANGE ANYTHING BEYOND THIS POINT, YOU BETTER KNOW
 %%%%% WHAT YOU ARE DOING %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-departureStdDev = zeros(noOfLinks);
 
 maneuversSequence = [0];
 maneuvers = zeros(noOfLinks, noOfCycles*noOfPhasesInACycle);

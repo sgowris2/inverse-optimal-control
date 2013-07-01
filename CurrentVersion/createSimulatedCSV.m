@@ -23,3 +23,5 @@ for i = 1:size(csv,1)
         simulatedCSV{i,j} = csv(i,j);
     end
 end
+
+csvwrite('simulatedCSV.csv',simulatedCSV);

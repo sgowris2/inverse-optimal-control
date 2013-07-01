@@ -34,7 +34,7 @@ for i = 1:IterationsPerStdDev
     [arrivalRateAgent] = createAgentArrival(errorStdDev);   % Create the arrival rates for the agent based on a normal distribution with standard deviation = errorStdDev
     alphaAgent = createAlpha(noOfLinks, noOfPhases, arrivalRateAgent, departureRate);   % Create alpha, a matrix that contains the arrival rates for each link during each phase.
     [A, b, Aeq, beq] = generateQPvars(simTime,alphaAgent,0,lInitial,minPhaseLength,maxPhaseLength,noOfLinks, noOfPhases);   % Generate the quadratic program optimal control solver for the agent
-    [weights, lambda, nu, fvalIOC exitflagIOC] = fminconIOC();      % Run the inverse optimal control solver
+    [weights, lambda, nu, fvalIOC, exitflagIOC] = fminconIOC();      % Run the inverse optimal control solver
     [yAgent agentPolicy fval2 exitflag2] = policySolver(minPhaseLength, maxPhaseLength, weights, 0);    % Solve the optimal control problem for the agent.
     [weightError, queueError, deltaError] = errorChecks(expertWeights, weights, expertPolicy, agentPolicy, xExpert, yAgent);    % Calculate the error between the true system and the agent.
     fprintf('Iteration %i complete.\n', i);

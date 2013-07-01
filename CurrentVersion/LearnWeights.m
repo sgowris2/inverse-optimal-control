@@ -1,4 +1,4 @@
-function [DataSet] = LearnWeights(DataSet, experiment)
+function [DataSet] = LearnWeights(DataSet, experiment, simulator)
 
 global xExpertCombined;
 global xIndex;
@@ -31,19 +31,22 @@ for dataSetLoopIndex = 1:d
         beq = beqTemp;
         first = 0;
         if experiment == 0
-            [DataSet{dataSetLoopIndex}{xIndex}, fvalExpert, DataSet{dataSetLoopIndex}{policyIndex}] = cplexOCSolver(HTemp,fTemp,ATemp,bTemp,AeqTemp,beqTemp,lbTemp,ubTemp,1,DataSet{dataSetLoopIndex});
-%             [xSimulated policy observedPhases maneuversSequence simTime] = intersectionSimulator(noOfCycles{dataSetLoopIndex});
-%             simulatedCSV = createSimulatedCSV(policy, maneuversSequence);
-%             maneuvers = generateSimulatedManeuvers();
-%             [arrivalRate, departureRate] = deduceArrivalDepartureRates(simulatedCSV, simTime, observedPhases, maneuvers);
-%             [alpha] = createAlpha(noOfLinks, noOfPhasesInACycle, arrivalRate, departureRate, phaseSets, noOfCycles{dataSetLoopIndex}, phaseSequence);
-%             [zeroTimePhases] = deduceZeroTimePhases(observedPhases, phaseSequence);
-%             DataSet{dataSetLoopIndex} = packageDataSets(1, noOfLinks, noOfPhasesInACycle,...
-%                                     0, 300, noOfCycles{dataSetLoopIndex},...
-%                                     simTime, arrivalRate, departureRate, [0,0,0,0,0,0,0,0],...
-%                                     phaseSets, phaseSequence, zeroTimePhases,alpha);
-%             DataSet{dataSetLoopIndex}{xIndex} = xSimulated;
-%             DataSet{dataSetLoopIndex}{policyIndex} = policy;
+            if simulator == 0
+                [DataSet{dataSetLoopIndex}{xIndex}, fvalExpert, DataSet{dataSetLoopIndex}{policyIndex}] = cplexOCSolver(HTemp,fTemp,ATemp,bTemp,AeqTemp,beqTemp,lbTemp,ubTemp,1,DataSet{dataSetLoopIndex});
+            else
+                [xSimulated policy observedPhases maneuversSequence simTime] = intersectionSimulator(noOfCycles{dataSetLoopIndex});
+                simulatedCSV = createSimulatedCSV(policy, maneuversSequence);
+                maneuvers = generateSimulatedManeuvers();
+                [arrivalRate, departureRate] = deduceArrivalDepartureRates(simulatedCSV, simTime, observedPhases, maneuvers);
+                [alpha] = createAlpha(noOfLinks, noOfPhasesInACycle, arrivalRate, departureRate, phaseSets, noOfCycles{dataSetLoopIndex}, phaseSequence);
+                [zeroTimePhases] = deduceZeroTimePhases(observedPhases, phaseSequence);
+                DataSet{dataSetLoopIndex} = packageDataSets(1, noOfLinks, noOfPhasesInACycle,...
+                                        0, 300, noOfCycles{dataSetLoopIndex},...
+                                        simTime, arrivalRate, departureRate, [0,0,0,0,0,0,0,0],...
+                                        phaseSets, phaseSequence, zeroTimePhases,alpha);
+                DataSet{dataSetLoopIndex}{xIndex} = xSimulated;
+                DataSet{dataSetLoopIndex}{policyIndex} = policy;
+            end
         end
     else
         if experiment == 0
