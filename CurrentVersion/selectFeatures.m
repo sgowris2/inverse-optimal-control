@@ -40,7 +40,7 @@ else
             phase7AvgLength = allPhasesAvgLength;
             phase8AvgLength = allPhasesAvgLength;
             
-        allPhasesLengthL1 = 1;
+        allPhasesLengthL1 = 0;
             phase1LengthL1 = allPhasesLengthL1;            
             phase2LengthL1 = allPhasesLengthL1;          
             phase3LengthL1 = allPhasesLengthL1;
@@ -50,7 +50,7 @@ else
             phase7LengthL1 = allPhasesLengthL1;
             phase8LengthL1 = allPhasesLengthL1;
             
-        allQueuesL1 = 1;
+        allQueuesL1 = 0;
             queue1LengthL1 = allQueuesL1;
             queue2LengthL1 = allQueuesL1;
             queue3LengthL1 = allQueuesL1;

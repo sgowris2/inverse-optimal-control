@@ -1,3 +1,11 @@
+This software is licensed under the University of Illinois/NCSA Open Source
+License:
+Copyright (c) 2013 The Board of Trustees of the University of Illinois. All
+rights reserved.
+Developed by: Department of Civil and Environmental Engineering University
+of Illinois at Urbana-Champaign
+
+
 Estimating traffic control strategies with inverse optimal control - Code submission
 Version 0.01 06/27/2013
 
