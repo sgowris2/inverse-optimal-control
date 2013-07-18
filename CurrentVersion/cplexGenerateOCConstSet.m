@@ -1,5 +1,8 @@
 function [A,b,Aeq,beq,lb,ub] = cplexGenerateOCConstSet(m,n,l,t,delta,alpha,minPhaseLength,maxPhaseLength,zeroTimePhases,l0,simTime,agentSimTime,expertFlag)
 
+global noOfPhasesInACycle;
+global intersectionName;
+
 t0 = 0;
 tf = simTime;
 deltaMin = minPhaseLength;
@@ -39,18 +42,21 @@ for k = 2:n
     eqNum = eqNum + 1;
 end
 % now we treat the zero length phases
-% for k = 1:n
-%     if ismember(k,zeroTimePhases)
-%         Aeq(eqNum,delta(k)) = 1;
-%         beq(eqNum,1) = 0; % not really needed
-%         eqNum = eqNum + 1;
-%     end
-% end
+for k = 1:n
+    if ismember(k,zeroTimePhases)
+        Aeq(eqNum,delta(k)) = 1;
+        beq(eqNum,1) = 0; % not really needed
+        eqNum = eqNum + 1;
+    end
+end
 
 %delta Min constraints: -delta(k)<=-deltaMin
 for k = 1:n
     A(ineqNum,delta(k)) = -1;
     b(ineqNum,1) = -deltaMin;
+%     if strcmp(intersectionName,'SpringfieldFirst') && (mod(k,noOfPhasesInACycle) == 4 || mod(k,noOfPhasesInACycle) == 0)
+%         b(ineqNum,1) = b(ineqNum,1) - 15;
+%     end
     ineqNum = ineqNum + 1;
 end
 

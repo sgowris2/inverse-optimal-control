@@ -17,6 +17,7 @@ global noOfLinks;
 global noOfPhasesInACycle;
 global phaseSets;
 global phaseSequence;
+global mandatoryPhases;
 
 d = numel(DataSet);
 
@@ -34,7 +35,8 @@ for dataSetLoopIndex = 1:d
             if simulator == 0
                 [DataSet{dataSetLoopIndex}{xIndex}, fvalExpert, DataSet{dataSetLoopIndex}{policyIndex}] = cplexOCSolver(HTemp,fTemp,ATemp,bTemp,AeqTemp,beqTemp,lbTemp,ubTemp,1,DataSet{dataSetLoopIndex});
             else
-                [xSimulated policy observedPhases maneuversSequence simTime] = intersectionSimulator(noOfCycles{dataSetLoopIndex});
+                [xSimulated policy observedPhases maneuversSequence simTime] = intersectionSimulatorSemiAdaptive(noOfCycles{dataSetLoopIndex});
+                %[xSimulated policy observedPhases maneuversSequence simTime] = intersectionSimulatorFullyAdaptive(noOfCycles{dataSetLoopIndex});
                 simulatedCSV = createSimulatedCSV(policy, maneuversSequence);
                 maneuvers = generateSimulatedManeuvers();
                 [arrivalRate, departureRate] = deduceArrivalDepartureRates(simulatedCSV, simTime, observedPhases, maneuvers);
@@ -42,7 +44,7 @@ for dataSetLoopIndex = 1:d
                 [zeroTimePhases] = deduceZeroTimePhases(observedPhases, phaseSequence);
                 DataSet{dataSetLoopIndex} = packageDataSets(1, noOfLinks, noOfPhasesInACycle,...
                                         0, 300, noOfCycles{dataSetLoopIndex},...
-                                        simTime, arrivalRate, departureRate, [0,0,0,0,0,0,0,0],...
+                                        simTime, arrivalRate, departureRate, zeros(1,noOfLinks),...
                                         phaseSets, phaseSequence, zeroTimePhases,alpha);
                 DataSet{dataSetLoopIndex}{xIndex} = xSimulated;
                 DataSet{dataSetLoopIndex}{policyIndex} = policy;

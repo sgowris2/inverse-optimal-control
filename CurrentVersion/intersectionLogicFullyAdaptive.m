@@ -1,4 +1,4 @@
-function newPhase = intersectionLogic(currentCyclePhase, currentQueues, currentPhaseLength,maxPhaseLengths,minPhaseLengths)
+function newPhase = intersectionLogicFullyAdaptive(currentCyclePhase, currentQueues, currentPhaseLength,maxPhaseLengths,minPhaseLengths)
 
 mandatoryPhaseChange = 0;
 

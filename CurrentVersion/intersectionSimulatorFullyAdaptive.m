@@ -1,4 +1,4 @@
-function [xSimulated policy simulatedPhaseSequence maneuversSequence simTime] = intersectionSimulator(noOfCycles)
+function [xSimulated policy simulatedPhaseSequence maneuversSequence simTime] = intersectionSimulatorFullyAdaptive(noOfCycles)
 
 % global noOfLinks;
 % global noOfPhasesInACycle;
@@ -77,7 +77,9 @@ while currentPhase <= noOfCycles*noOfPhasesInACycle
             end
         end
         currentPhaseLength = currentPhaseLength + 1;
-        newPhase = intersectionLogic(currentCyclePhase, currentQueues, currentPhaseLength,maxPhaseLengths,minPhaseLengths);
+        
+        newPhase = intersectionLogicFullyAdaptive(currentCyclePhase, currentQueues, currentPhaseLength,maxPhaseLengths,minPhaseLengths);
+        
         if newPhase ~= currentCyclePhase
             currentPhaseIndex = find(phaseSequence == currentCyclePhase);
             nextPhaseIndex = find(phaseSequence == newPhase);
@@ -101,6 +103,7 @@ while currentPhase <= noOfCycles*noOfPhasesInACycle
             
             xSimulated(t(currentPhase)) = k;
             xSimulated(delta(currentPhase)) = currentPhaseLength;
+            currentPhaseLength = 0;
             for i = 1:noOfLinks
                 xSimulated(l(i,currentPhase)) = currentQueues(i);
             end

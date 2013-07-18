@@ -1,4 +1,4 @@
-function [AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0] = cplexGenerateIOCConstSet(m,n,noOfCycles,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos)
+function [AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,rho1,rho2] = cplexGenerateIOCConstSet(m,n,noOfCycles,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos)
 
 global minWeight;
 persistent l;       % indexed by (link#, phase#)
@@ -12,6 +12,7 @@ global xExpertCombined;
 global noOfCyclesIndex;
 global featureSelectionIndex;
 global phaseSequence;
+global mandatoryPhases;
 r1Size = numel(xExpertCombined);
 r2Size = 1;
 
@@ -70,6 +71,10 @@ for i = 1:m
     [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
 end
 
+for i = 1:m
+    [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,numel(xExpertCombined),phaseSequence);
+end
+
 for i=1:r1Size
     for j=1:weightsSize
         jIndex = find(featureSelectionIndex == j);
@@ -106,3 +111,14 @@ x0 = zeros(xSize,1);
 % for i = 1:lambdaSize
 %     x0(weightsSize + i) = rand(1,1);
 % end
+
+rho1 = Aeq*xExpertCombined - beq;
+rho2 = zeros(numel(xExpertCombined),1);
+const = A*xExpertCombined - b;
+for i = 1:numel(rho2)
+    if const(i) > 0
+        rho2(i) = const(i);
+    else
+        rho2(i) = 0;
+    end
+end

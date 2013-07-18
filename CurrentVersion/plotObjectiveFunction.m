@@ -8,7 +8,8 @@ featureNames = {'allQueues','allPhases', ...
                 'phase1','phase2','phase3','phase4','phase5','phase6','phase7','phase8',...
                 'sensor1','sensor2','sensor3','sensor4','sensor5','sensor6','sensor7','sensor8'...
                 'cSensor1','cSensor2','cSensor3','cSensor4','cSensor5','cSensor6','cSensor7','cSensor8',...
-                'phase1length','phase2length','phase3length','phase4length','phase5length','phase6length','phase7length','phase8length'};
+                'phase1length','phase2length','phase3length','phase4length','phase5length','phase6length','phase7length','phase8length',...
+                'leftTurnPenalty1','leftTurnPenalty2','leftTurnPenalty3','leftTurnPenalty4','leftTurnPenalty5','leftTurnPenalty6','leftTurnPenalty7','leftTurnPenalty8'};
 str = cell(1,8);
 for i = 1:8
     str{i} = 'none';
@@ -24,7 +25,7 @@ end
 %     end
 % end
 
-subplot(3,1,1);
+figure;
 bar(weights);
 title('Computed weights of the objective function for all features');
 xlabel('Feature #');
@@ -33,7 +34,7 @@ ylabel('Normalized weight value');
 
 [featureArray] = cplexEvaluateFeatureValues(x);
 
-subplot(3,1,2);
+figure;
 
 Y = zeros(1,sum(featureSelection));
 for j = 1:sum(featureSelection)
@@ -51,7 +52,7 @@ xlabel('Feature #');
 ylabel('Feature Value');
 legend(str{1},str{2},str{3},str{4},str{5},str{6},str{7},str{8});
 
-subplot(3,1,3);
+figure;
 bar(weights.*Y);
 title('Weighted feature values of the objective function');
 xlabel('Feature #');

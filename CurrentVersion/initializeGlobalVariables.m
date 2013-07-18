@@ -34,6 +34,8 @@ global policyIndex;
 global t;
 global l;
 global delta;
+global rho1;
+global rho2;
 
 numberOfIterations = 0;
 minWeight = 0.001;

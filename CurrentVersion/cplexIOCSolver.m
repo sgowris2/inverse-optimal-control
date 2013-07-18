@@ -8,6 +8,8 @@ global noOfLinks;
 global xExpertCombined;
 global noOfCyclesIndex;
 global noOfPhasesInACycle;
+global rho1;
+global rho2;
 
 c = d{noOfCyclesIndex};
 n = c*noOfPhasesInACycle;
@@ -23,7 +25,7 @@ xSize = weightsSize + lambdaSize + nuSize+ r1Size + r2Size; % There are 5 weight
 
 % Set up the optimization problem matrices
 
-[AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0] = cplexGenerateIOCConstSet(m,n,c,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos);
+[AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,rho1,rho2] = cplexGenerateIOCConstSet(m,n,c,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos);
 [C,d] = cplexGenerateIOCvars(xSize,r1Size,r2Size,r1Pos,r2Pos);
 
 % Run cplex here.

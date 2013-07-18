@@ -15,6 +15,7 @@ global minPhaseLength;      % Minimum phase length in seconds
 global maxPhaseLength;      % Maximum phase length in seconds
 global arrivalRate;
 global yAgent;
+global HExpert;
 
 minWeight = 1e-3;
 % SigmaMin = 0;               % Lowest standard deviation value for sensitivity analysis
@@ -36,7 +37,7 @@ for i = 1:IterationsPerStdDev
     [A, b, Aeq, beq] = generateQPvars(simTime,alphaAgent,0,lInitial,minPhaseLength,maxPhaseLength,noOfLinks, noOfPhases);   % Generate the quadratic program optimal control solver for the agent
     [weights, lambda, nu, fvalIOC, exitflagIOC] = fminconIOC();      % Run the inverse optimal control solver
     [yAgent agentPolicy fval2 exitflag2] = policySolver(minPhaseLength, maxPhaseLength, weights, 0);    % Solve the optimal control problem for the agent.
-    [weightError, queueError, deltaError] = errorChecks(expertWeights, weights, expertPolicy, agentPolicy, xExpert, yAgent);    % Calculate the error between the true system and the agent.
+    [objError, queueError, deltaError] = errorChecks(expertWeights, weights, expertPolicy, agentPolicy, xExpert, yAgent);    % Calculate the error between the true system and the agent.
     fprintf('Iteration %i complete.\n', i);
     toc(t2);
 end

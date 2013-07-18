@@ -14,6 +14,7 @@ global arrivalRate;
 global departureRate;
 global alpha;
 global H;
+global HExpert;
 
 corrected = 0;
 for i = 1:size(weights,2)
@@ -26,8 +27,14 @@ if corrected == 1
     warning('Weights did not meet the minimum value and were shifted to satisfy the requirement.');
 end
 if expertFlag == 1          % Pick arrival rates if policy solver is run for the expert's optimal control problem
-    arrivalRate(1) = 1000/3600*rand([1,1]) + 1000/3600; % per second
-    arrivalRate(2) = 1000/3600*rand([1,1]); %per second
+
+    % Uncomment this block to randomly draw arrival rates from a
+    % distribution
+    %     arrivalRate(1) = 1000/3600*rand([1,1]) + 1000/3600; % per second
+    %     arrivalRate(2) = 1000/3600*rand([1,1]); %per second
+    
+    arrivalRate = [1600/3600,800/3600];
+    
     alpha = createAlpha(noOfLinks, noOfPhases, arrivalRate, departureRate);     % Create alpha, a matrix that contains the arrival rates for each link during each phase
 else
     alpha = createAlpha(noOfLinks, noOfPhases, arrivalRate, departureRate);     % Create alpha, a matrix that contains the arrival rates for each link during each phase
@@ -48,6 +55,10 @@ for j = 3*n+1:4*n
         else
         end
     end
+end
+
+if expertFlag == 1
+    HExpert = H;
 end
 
 lb = zeros(4*n, 1);

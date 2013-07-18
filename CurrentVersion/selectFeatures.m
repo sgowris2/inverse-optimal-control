@@ -50,7 +50,7 @@ else
             phase7LengthL1 = allPhasesLengthL1;
             phase8LengthL1 = allPhasesLengthL1;
             
-        allQueuesL1 = 0;
+        allQueuesL1 = 1;
             queue1LengthL1 = allQueuesL1;
             queue2LengthL1 = allQueuesL1;
             queue3LengthL1 = allQueuesL1;
@@ -59,6 +59,20 @@ else
             queue6LengthL1 = allQueuesL1;
             queue7LengthL1 = allQueuesL1;
             queue8LengthL1 = allQueuesL1;
+            
+        allLeftTurnPenalties = 0;
+            queue1LeftTurnPenalty = allLeftTurnPenalties;
+            %queue1LeftTurnPenalty = 0;
+            queue2LeftTurnPenalty = allLeftTurnPenalties;
+            queue3LeftTurnPenalty = allLeftTurnPenalties;
+            %queue3LeftTurnPenalty = 0;
+            queue4LeftTurnPenalty = allLeftTurnPenalties;
+            queue5LeftTurnPenalty = allLeftTurnPenalties;
+            %queue5LeftTurnPenalty = 0;
+            queue6LeftTurnPenalty = allLeftTurnPenalties;
+            queue7LeftTurnPenalty = allLeftTurnPenalties;
+            %queue7LeftTurnPenalty = 0;
+            queue8LeftTurnPenalty = allLeftTurnPenalties;
         
     else
         n = 24;
@@ -72,5 +86,6 @@ else
                     phase1,phase2,phase3,phase4,phase5,phase6,phase7,phase8...
                     phase1AvgLength, phase2AvgLength,phase3AvgLength,phase4AvgLength,phase5AvgLength,phase6AvgLength,phase7AvgLength,phase8AvgLength,...
                     phase1LengthL1,phase2LengthL1,phase3LengthL1,phase4LengthL1,phase5LengthL1,phase6LengthL1,phase7LengthL1,phase8LengthL1,...
-                    queue1LengthL1,queue2LengthL1,queue3LengthL1,queue4LengthL1,queue5LengthL1,queue6LengthL1,queue7LengthL1,queue8LengthL1];
+                    queue1LengthL1,queue2LengthL1,queue3LengthL1,queue4LengthL1,queue5LengthL1,queue6LengthL1,queue7LengthL1,queue8LengthL1,...
+                    queue1LeftTurnPenalty,queue2LeftTurnPenalty,queue3LeftTurnPenalty,queue4LeftTurnPenalty,queue5LeftTurnPenalty,queue6LeftTurnPenalty,queue7LeftTurnPenalty,queue8LeftTurnPenalty];
 end

@@ -6,6 +6,7 @@ global featureSelectionIndex;
 global phaseSequence;
 global xIndex;
 global zeroTimePhasesIndex;
+global mandatoryPhases;
 
 if expertFlag == 1
     localWeights = expertWeights;
@@ -58,6 +59,10 @@ end
 for i = 1:m
     [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,xSize);
 end
+for i = 1:m
+    [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,xSize,phaseSequence);
+end
+
 H = zeros(xSize);
 F = zeros(1,xSize);
 if experiment == 0 && expertFlag == 0

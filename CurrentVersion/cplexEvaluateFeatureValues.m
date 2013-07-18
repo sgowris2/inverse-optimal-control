@@ -6,6 +6,7 @@ global noOfPhasesInACycle;
 global phaseSequence;
 global noOfLinks;
 global featureSelection;
+global mandatoryPhases;
 
 [l,t,delta] = xIndexing(noOfLinks,noOfCycles{1}*noOfPhasesInACycle);
 
@@ -26,8 +27,11 @@ end
 for i = 1:noOfLinks
     [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
 end
+for i = 2:2:noOfLinks
+    [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,numel(xExpertCombined),phaseSequence);
+end
 
-for i = 1:42
+for i = 1:numel(J)   
     if numel(J) >= i
         if numel(J{i})>1 && numel(f{i})>1
             featureArray(i) = featureSelection(i) * (x'*J{i}*x + f{i}*x);
