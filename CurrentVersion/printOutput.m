@@ -5,6 +5,8 @@ global noOfDataSets;
 global expertWeights;
 global policyIndex;
 global simTimeIndex;
+global rho1;
+global rho2;
 
 
 % fprintf('\nExpert arrival rate is [');
@@ -46,3 +48,5 @@ fprintf('\nPolicy for calculated weights is:\n|');
 fprintf('%.2f|', agentDataSet{policyIndex});
 fprintf('\n');
 fprintf('\n2-norm error on the policy: %f percent\n', 100*(norm(DataSet{1}{policyIndex}(:) - agentDataSet{policyIndex}, 2))/DataSet{1}{simTimeIndex});
+fprintf('\nRho1: %f', norm(rho1));
+fprintf('\nRho2: %f', norm(rho2));

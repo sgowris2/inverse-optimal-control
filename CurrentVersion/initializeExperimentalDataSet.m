@@ -77,6 +77,7 @@ for i = 1:numel(filenames)
     
     DataSet{i}{xIndex} = [l{i}';t{i}';delta{i}'];
     DataSet{i}{policyIndex} = [t{i}'];
+    %[DataSet{i}{alphaIndex}] = optimizeAlpha(i,DataSet);
     
     avgPhaseLength{i} = deduceAveragePhaseLengths(DataSet{i}, delta{i});
 end

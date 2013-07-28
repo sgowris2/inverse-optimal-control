@@ -17,43 +17,34 @@ if sum(featureSelection) <= 0
     error('Not enough features selected.');
 end
 
-if featureSelection(1) == 0
-    if sum(featureSelection(3:10)) + sum(featureSelection(35:42)) == 0
-       % error('Objective function must be strictly increasing in queue length. Please select features that make this happen.');
-    end
+if sum(featureSelection(10:17)) + sum(featureSelection(18:25)) == 0
+       error('Objective function must be strictly increasing in queue length. Please select features that make this happen.');
 end
 
-for i = 12:18
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-10
-        warning('Phase feature selected, but phase does not seem to exist. Ignoring phase %i feature.',i-10);
+for i = 3:9
+    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-1
+        warning('Phase feature selected, but phase does not seem to exist. Ignoring phase %i feature.',i-1);
         featureSelection(i) = 0;
     end
 end
 
-for i = 4:10
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-2
-        warning('Queue feature selected, but queue does not seem to exist. Ignoring queue feature %i.', i-2);
+for i = 11:17
+    if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-9
+        warning('Queue feature selected, but queue does not seem to exist. Ignoring queue feature %i.', i-9);
         featureSelection(i) = 0;
     end
 end
 
-for i = 20:26
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-18
-        warning('Phase feature selected, but link does not seem to exist. Ignoring sensor %i feature.', i-18);
+for i = 19:25
+    if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-17
+        warning('Queue feature selected, but link does not seem to exist. Ignoring queue %i feature.', i-17);
         featureSelection(i) = 0;
     end
 end
 
-for i = 28:34
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-26
-        warning('Phase feature selected, but link does not seem to exist. Ignoring sensor %i feature.', i-26);
-        featureSelection(i) = 0;
-    end
-end
-
-for i = 36:42
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-34
-        warning('Queue feature selected, but link does not seem to exist. Ignoring sensor %i feature.', i-34);
+for i = 27:33
+    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-25
+        warning('Phase feature selected, but phase does not seem to exist. Ignoring phase %i feature.', i-25);
         featureSelection(i) = 0;
     end
 end

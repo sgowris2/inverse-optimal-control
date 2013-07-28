@@ -7,6 +7,7 @@ global phaseSequence;
 global xIndex;
 global zeroTimePhasesIndex;
 global mandatoryPhases;
+global HExpert;
 
 if expertFlag == 1
     localWeights = expertWeights;
@@ -35,59 +36,59 @@ global agentSimTime;
 [l,t,delta] = xIndexing(m,n);    % Index l,t and delta within the vector x
 xSize = numel(l) + numel(t) + numel(delta);
 
-J{1} = objJ1_allQ(l,xSize);
-J{2} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,xSize);
+J{1} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,xSize);
+for i = 1:numel(phaseSequence)
+    J{i+1} = objJ_phaseLength(i,{dataSet{zeroTimePhasesIndex}},phaseSequence,delta,noOfCycles,xSize);
+end
 for i = 1:m
-    J{i+2} = objJ_queueLength(i,l,xSize);
+    [J{i+9} f{i+9}] = objJ_queueLengthL1(i,l,xSize);
 end
-for i = 1:numel(phaseSequence)
-    J{i+10} = objJ_phaseLength(i,dataSet{zeroTimePhasesIndex},phaseSequence,delta,noOfCycles,xSize);
-end
-for i = 1:numel(phaseSequence)
-    [J{i+26} f{i+26}] = objJ_phaseLengthL1(i,phaseSequence,delta,xSize);
+for i = 1:m
+    [J{i+17}] = objJ_queueLength(i,l,xSize);
 end
 if expertFlag == 0
     for i = 1:numel(phaseSequence)
-        [J{i+18} f{i+18}] = objJ_phaseAvgLength(i,dataSet{xIndex},phaseSequence,delta,xSize);
+        [J{i+25} f{i+25}] = objJ_phaseAvgLength(i,dataSet{xIndex},phaseSequence,delta,xSize);
     end
 else
     for i = 1:numel(phaseSequence)
-        J{i+18} = 0;
+        J{i+25} = 0;
+        f{i+25} = 0;
     end
-    f = {0};
 end
-for i = 1:m
-    [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,xSize);
-end
-for i = 1:m
-    [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,xSize,phaseSequence);
-end
+
+% for i = 1:numel(phaseSequence)
+%     [J{i+26} f{i+26}] = objJ_phaseLengthL1(i,phaseSequence,delta,xSize);
+% end
+% 
+% 
+% for i = 1:m
+%     [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,xSize,phaseSequence);
+% end
 
 H = zeros(xSize);
 F = zeros(1,xSize);
-if experiment == 0 && expertFlag == 0
+if experiment == 0
     for i = 1:numel(featureSelectionIndex)
         if featureSelectionIndex(i) > 0
             H = H + (localWeights(featureSelectionIndex(i))*J{i});
-            if numel(f{i}) > 1
+            if numel(f{i}) > 1 && ~ismember(i,[26,27,28,29,30,31,32,33])
                 F = F + (localWeights(featureSelectionIndex(i))*f{i});  % The phases that minimize the avg observed phase length for each phase can only be used when phases were observed.
+            else
+                F = F + zeros(1,size(H,1));
             end
         end
     end
     H = 2*H;
-elseif experiment == 0 && expertFlag == 1
-    for i = 1:numel(featureSelectionIndex)
-        if featureSelectionIndex(i) > 0
-            H = H + (localWeights(featureSelectionIndex(i))*J{i});
-        end
-    end
-    H = 2*H;
-    F = zeros(1,size(H,1));     % Cannot use the feature that minimzes the error of the phase length from the average observed phase length
 else
     H = [];
     F = [];
 end
 x0 = zeros(xSize,1);
+
+if experiment == 0 && expertFlag == 1
+    HExpert = H;
+end
 
 [A,b,Aeq,beq,lb,ub] = cplexGenerateOCConstSet(m,n,l,t,delta,alpha,minPhaseLength,maxPhaseLength,zeroTimePhases,lInitial,simTime,agentSimTime,expertFlag);
 

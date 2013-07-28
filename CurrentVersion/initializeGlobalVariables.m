@@ -36,6 +36,13 @@ global l;
 global delta;
 global rho1;
 global rho2;
+global er;
+global ev;
+global ep;
+global eobj;
+global edelta;
+global eq;
+global HExpert;
 
 numberOfIterations = 0;
 minWeight = 0.001;

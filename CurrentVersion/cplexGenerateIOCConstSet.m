@@ -13,6 +13,7 @@ global noOfCyclesIndex;
 global featureSelectionIndex;
 global phaseSequence;
 global mandatoryPhases;
+global zeroTimePhases;
 r1Size = numel(xExpertCombined);
 r2Size = 1;
 
@@ -53,26 +54,40 @@ for j=1:lambdaSize
     AeqIOCSize = AeqIOCSize+1;
 end
 
-J{1} = objJ1_allQ(l,numel(xExpertCombined));
-J{2} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
-for i = 1:m
-    J{i+2} = objJ_queueLength(i,l,numel(xExpertCombined));
-end
-for i = 1:numel(phaseSequence)
-    J{i+10} = objJ_phaseLength(i,xExpertCombined,phaseSequence,delta,noOfCycles,numel(xExpertCombined));
-end
-for i = 1:numel(phaseSequence)
-    [J{i+18} f{i+18}] = objJ_phaseAvgLength(i,xExpertCombined,phaseSequence,delta,numel(xExpertCombined));
-end
-for i = 1:numel(phaseSequence)
-    [J{i+26} f{i+26}] = objJ_phaseLengthL1(i,phaseSequence,delta,numel(xExpertCombined));
-end
-for i = 1:m
-    [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
-end
+% J{1} = objJ1_allQ(l,numel(xExpertCombined));
+% J{2} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
+% for i = 1:m
+%     J{i+2} = objJ_queueLength(i,l,numel(xExpertCombined));
+% end
+% for i = 1:numel(phaseSequence)
+%     J{i+10} = objJ_phaseLength(i,xExpertCombined,phaseSequence,delta,noOfCycles,numel(xExpertCombined));
+% end
+% for i = 1:numel(phaseSequence)
+%     [J{i+18} f{i+18}] = objJ_phaseAvgLength(i,xExpertCombined,phaseSequence,delta,numel(xExpertCombined));
+% end
+% for i = 1:numel(phaseSequence)
+%     [J{i+26} f{i+26}] = objJ_phaseLengthL1(i,phaseSequence,delta,numel(xExpertCombined));
+% end
+% for i = 1:m
+%     [J{i+34} f{i+34}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
+% end
+% 
+% for i = 1:m
+%     [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,numel(xExpertCombined),phaseSequence);
+% end
 
+J{1} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
+for i = 1:numel(phaseSequence)
+    J{i+1} = objJ_phaseLength(i,zeroTimePhases,phaseSequence,delta,noOfCycles,numel(xExpertCombined));
+end
 for i = 1:m
-    [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,numel(xExpertCombined),phaseSequence);
+    [J{i+9} f{i+9}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
+end
+for i = 1:m
+    [J{i+17}]= objJ_queueLength(i,l,numel(xExpertCombined));
+end
+for i = 1:numel(phaseSequence)
+    [J{i+25} f{i+25}] = objJ_phaseAvgLength(i,xExpertCombined,phaseSequence,delta,numel(xExpertCombined));
 end
 
 for i=1:r1Size

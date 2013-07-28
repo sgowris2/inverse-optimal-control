@@ -1,4 +1,4 @@
-function [DataSet] = LearnWeights(DataSet, experiment, simulator)
+function [DataSet IOCResidual] = LearnWeights(DataSet, experiment, simulator)
 
 global xExpertCombined;
 global xIndex;
@@ -18,6 +18,7 @@ global noOfPhasesInACycle;
 global phaseSets;
 global phaseSequence;
 global mandatoryPhases;
+global zeroTimePhases;
 
 d = numel(DataSet);
 
@@ -77,5 +78,5 @@ end
 %weights = fminconIOCSolver();
 
 xExpertCombined = DataSet{1}{xIndex};
-weights = cplexIOCSolver(A,Aeq,DataSet{1});
+[weights IOCResidual] = cplexIOCSolver(A,Aeq,DataSet{1});
 

@@ -1,4 +1,4 @@
-function [weights] = cplexIOCSolver(A,Aeq,d)
+function [weights IOCResidual] = cplexIOCSolver(A,Aeq,d)
 
 global weightsSize;
 global minWeight;
@@ -64,8 +64,9 @@ end
 for i = 1:weightsSize
     weights(i) = x(i);
 end
-lambda(:,1) = x(lambdaPos(1):lambdaPos(lambdaSize));
-nu(:,1) = x(nuPos(1):nuPos(nuSize));
-IOCResiduals = C*x;
+% lambda(:,1) = x(lambdaPos(1):lambdaPos(lambdaSize));
+% nu(:,1) = x(nuPos(1):nuPos(nuSize));
+% IOCResiduals = C*x;
 fprintf('Residual 1: %f\n', norm(x(r1Pos)));
 fprintf('Residual 2: %f\n', norm(x(r2Pos)));
+IOCResidual = norm(x(r1Pos)) + norm(x(r2Pos));

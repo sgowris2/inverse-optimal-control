@@ -30,7 +30,7 @@ i = 1;
 zeroTimePhases{i} = deduceZeroTimePhases(observedPhases{i}, phaseSequence);
 noOfCycles{i} = ((numel(observedPhases{i}) + numel(zeroTimePhases{i}))/numel(phaseSequence));
 agentSimTime{1} = 600;
-arrivalRate{1} = 0.4*ones(noOfLinks,1);
+arrivalRate{1} = 0.4*ones(noOfLinks,(noOfCycles{i}*noOfPhasesInACycle));
 for j = 1:numel(arrivalRate{1})
     arrivalRate{1}(j) = arrivalRate{1}(j)*rand(1,1);
 end

@@ -1,7 +1,7 @@
 function [J] = objJ_phaseLength(phaseNo,zeroTimePhases,phaseSequence,delta,cMax,xSize)
 
 % sum(k = 1 to n) delta(k) (if delta(k) ~= 0) = x'*J*x
-
+zeroTimePhases = zeroTimePhases{:};
 J = zeros(xSize);
 
 phaseIndex = 0;
@@ -18,10 +18,15 @@ else
     end
     for k1 = 1:numel(delta)
         for k2 = 1:numel(delta)
-            if (mod(k1,numel(phaseSequence)) == phaseIndex) && ~ismember(k1,zeroTimePhases) > 0 ...
-                    && (mod(k2,numel(phaseSequence)) == phaseIndex) && ~ismember(k2,zeroTimePhases) > 0
-                    
-                    J(delta(k1),delta(k2)) = -1/cMax;
+            if (mod(k1,numel(phaseSequence)) == phaseIndex)...
+                    && (mod(k2,numel(phaseSequence)) == phaseIndex)
+                    if numel(zeroTimePhases) == 0
+                        J(delta(k1),delta(k2)) = -1/cMax;
+                    else
+                        if ~ismember(k1,zeroTimePhases) > 0 && ~ismember(k2,zeroTimePhases) > 0
+                            J(delta(k1),delta(k2)) = -1/cMax;
+                        end
+                    end
             end
             if k1 == k2
                 J(delta(k1),delta(k2)) = J(delta(k1),delta(k2)) + 1;
