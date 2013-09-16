@@ -4,9 +4,10 @@ t1 = tic;
 initializeGlobalVariables();
 addpath('C:\Program Files\IBM\ILOG\CPLEX_Studio1251\cplex\matlab\x64_win64');
 
-experimentalData = 0;
+experimentalData = 1;
 simulator = 0;
-noOfIterations = 100;
+noOfIterations = 1;
+solverName = 'tomlab'; % 'tomlab' or 'cplex'
 
 cycleFeatures = 0;
 generalizedObj = 0;
@@ -24,16 +25,14 @@ if experimentalData == 1
     checkFeatures();
     weightsSize = sum(featureSelection);
     createFeatureSelectionIndex();
-    [DataSet IOCResidual] = LearnWeights(DataSet, experimentalData,simulator);    %Returns updated DataSet with policy embedded
+    [DataSet IOCResidual] = LearnWeights(DataSet,experimentalData,simulator);    %Returns updated DataSet with policy embedded
     [agentDataSet] = simulateAgent(DataSet{1});
+    saveEmpiricalPerformanceMetrics(DataSet, agentDataSet, IOCResidual, rho1, rho2, 1, experimentalData);
+    plotResidualsAndInfeasibility(eobj, edelta, eq, er, ev, ep);
     printOutput(DataSet, agentDataSet, experimentalData);
     visualize(DataSet, agentDataSet);
 else
-    weightIndex = zeros(1,sum(featureSelection));
-    
-    %weightIndex(1) = 1;
-    %weightIndex(2:3) = 1;
-    weightIndex(10:13) = 1;
+    weightIndex = ones(1,sum(featureSelection));
     
     [DataSet] = initializeDataSet();
     residualVector = zeros(noOfIterations,1);
@@ -48,7 +47,7 @@ else
         weightsSize = sum(featureSelection);
         createFeatureSelectionIndex();
         expertWeights = drawRandomWeights(weightIndex, featureSelectionIndex);
-        [DataSet IOCResidual] = LearnWeights(DataSet, experimentalData,simulator);    %Returns updated DataSet with policy embedded
+        [DataSet IOCResidual] = LearnWeights(DataSet,experimentalData,simulator);    %Returns updated DataSet with policy embedded
         [agentDataSet] = simulateAgent(DataSet{1});
         saveEmpiricalPerformanceMetrics(DataSet, agentDataSet, IOCResidual, rho1, rho2, iteration, experimentalData);
         if simulator == 1    
