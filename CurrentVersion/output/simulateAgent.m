@@ -16,7 +16,7 @@ agentNoOfCycles = agentDataSet{noOfCyclesIndex};
 agentSimTime = agentDataSet{simTimeIndex};
 if strcmp(solverName,'cplex')
     [H,f,A,b,Aeq,beq,lb,ub] = cplexGenerateOCvars(agentDataSet,0,0);
-        [agentDataSet{xIndex}, fvalAgent, agentDataSet{policyIndex}]...
+        [agentDataSet{xIndex}, agentDataSet{objIndex}, agentDataSet{policyIndex}]...
                     = cplexOCSolver(H,f,A,b,Aeq,beq,lb,ub,1,agentDataSet);
 elseif strcmp(solverName,'tomlab')
     [A,bL,bU,cL,cU,xL,xU] = tomlabGenerateOCVars(agentDataSet,0,0);

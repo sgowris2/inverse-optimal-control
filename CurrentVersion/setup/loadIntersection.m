@@ -19,14 +19,23 @@ switch intersectionName
         maneuvers{4} = [68524,68515,68530];
         maneuvers{1} = [68528,68522,68531];
         maneuvers{2} = [68523,68514,68533];
-%         maneuvers{1} = [1,2,3];
-%         maneuvers{2} = [7,8,9];
-%         maneuvers{3} = [4,5,6];
-%         maneuvers{4} = [10,11,12];
         lInitial{1} = [5 0 5 0];     % Initial queue lengths at each link
         phaseSets{1} = [1,2];       % Contains the indices of the links that have a green in phase 1
         phaseSets{2} = [3,4];       % Contains the indices of the links that have a green in phase 2
         
+    case 'GreenFirstVisSim'
+        noOfLinks = 4;              % Common to all datasets
+        leftTurnLinks = [];
+        phaseSequence = [1,2];
+        mandatoryPhases = [1,2];
+        maneuvers = cell(1,noOfLinks);
+        maneuvers{1} = [1,2,3];
+        maneuvers{2} = [7,8,9];
+        maneuvers{3} = [4,5,6];
+        maneuvers{4} = [10,11,12];
+        lInitial{1} = [5 0 5 0];     % Initial queue lengths at each link
+        phaseSets{1} = [1,2];       % Contains the indices of the links that have a green in phase 1
+        phaseSets{2} = [3,4];       % Contains the indices of the links that have a green in phase 2
     case 'SpringfieldFirst'
         noOfLinks = 8;              % Common to all datasets
         leftTurnLinks = [2,4,6,8];

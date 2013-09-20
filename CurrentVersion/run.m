@@ -7,7 +7,7 @@ addpath('C:\Program Files\IBM\ILOG\CPLEX_Studio1251\cplex\matlab\x64_win64');
 experimentalData = 1;
 simulator = 0;
 noOfIterations = 1;
-solverName = 'cplex'; % 'tomlab' or 'cplex'
+solverName = 'tomlab'; % 'tomlab' or 'cplex'
 
 cycleFeatures = 0;
 generalizedObj = 0;

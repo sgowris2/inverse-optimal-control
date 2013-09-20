@@ -1,14 +1,15 @@
-intersectionName = 'GreenFirst';
-    filenames{1} = 'TT_FirstAndGreen1.xls';
-%     filenames{1} = 'SimulatedIntersection.xls';
-%     filenames{1} = 'fixedTimeVisSim.xls';
-%     filenames{1} = 'delayVisSim.xls';
-    observedPhases{1} =     [1,2,...
-                             1,2,1,2,1,2,1,2,1,2,1,2];
-%     observedPhases{1} =     [1,2,1,2,1,2,1,2,1,2,...
-%                              1,2,1,2,1,2,1,2,1,2];
-                         
-%     observedPhases{1} =     [1,2,1,2,1,2,1,2,1,2];
+% intersectionName = 'GreenFirst';
+%     filenames{1} = 'TT_FirstAndGreen1.xls';
+% 
+%     observedPhases{1} =     [1,2,...
+%                              1,2,1,2,1,2,1,2,1,2,1,2];
+% %     observedPhases{1} =     [1,2,1,2,1,2,1,2,1,2,...
+% %                              1,2,1,2,1,2,1,2,1,2];
+
+intersectionName = 'GreenFirstVisSim';
+    
+    filenames{1} = 'delayVisSim.xls';
+    observedPhases{1} =     [1,2,1,2,1,2,1,2,1,2];
 %     
 % intersectionName = '116Broadway';
 %     filenames{1} = '116th&Broadway.xls';
