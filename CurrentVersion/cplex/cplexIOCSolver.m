@@ -38,26 +38,26 @@ else
 end
 % retries = 0;
 % if exitflag < 1    
-% %     if exitflag == 0
+%     if exitflag == 0
 %         while retries < 1 && exitflag < 1
 %             warning('Inverse Optimal Control Solver has not converged and is re-trying...\n');
 %             fprintf('Retry %i\n\n', retries);
 %             [x fval exitflag] = quadprog(HIOC,fIOC,AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,options);
 %             retries = retries + 1;
 %         end
-% %     else
-% %         warning('Inverse Optimal Control Solver might not have found a feasible point. Retrying...');
-% %         fprintf('IOC fval: %.2f\n', fval);
-% %         fprintf('IOC exitflag: %i\n', exitflag);
-% %     end
+%     else
+%         warning('Inverse Optimal Control Solver might not have found a feasible point. Retrying...');
+%         fprintf('IOC fval: %.2f\n', fval);
+%         fprintf('IOC exitflag: %i\n', exitflag);
+%     end
 % end
 
-% if exitflag >= 1
-%     fprintf('IOC Converged.\n');
-%     fprintf('fval: %f\n', fval);
-% else
-%     fprintf('IOC did not converge even after %i retries.\n', retries);
-% end
+if exitflag >= 1
+    fprintf('IOC Converged.\n');
+    %fprintf('fval: %f\n', fval);
+else
+    fprintf('IOC did not converge.\n');
+end
 
 
 % Format output here.

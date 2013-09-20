@@ -28,8 +28,8 @@ loadIntersection(intersectionName);
 
 noOfDataSets = numel(filenames);
 noOfPhasesInACycle = numel(unique(phaseSequence));
-minPhaseLength = 20;        % Common to all datasets
-maxPhaseLength = 100;       % Common to all datasets
+minPhaseLength = 0;        % Common to all datasets
+maxPhaseLength = 300;       % Common to all datasets
 
 noOfCycles = cell(noOfDataSets,1);
 noOfPhases = cell(noOfDataSets,1);

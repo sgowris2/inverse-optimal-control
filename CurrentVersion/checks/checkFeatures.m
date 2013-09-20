@@ -4,6 +4,7 @@ global featureSelection;
 global noOfPhasesInACycle;
 global noOfLinks;
 global generalizedObj;
+global solverName;
 
 for i = 1:numel(featureSelection)
     if featureSelection(i) ~= 0
@@ -43,16 +44,31 @@ for i = 19:25
 end
 
 for i = 27:33
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-25
-        warning('Queue feature selected, but queue does not seem to exist. Ignoring queue %i feature.', i-25);
-        featureSelection(i) = 0;
+    if strcmp(solverName, 'tomlab')
+        if generalizedObj == 0 && featureSelection(i) == 1 && noOfLinks < i-25
+            warning('Queue feature selected, but queue does not seem to exist. Ignoring queue %i feature.', i-25);
+            featureSelection(i) = 0;
+        end
+    elseif strcmp(solverName, 'cplex')
+        if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-25
+            warning('Phase feature selected, but phase does not seem to exist. Ignoring queue %i feature.', i-25);
+            featureSelection(i) = 0;
+        end
+    else
+        error('Solver name not recognized.');
     end
 end
 
 for i = 35:41
-    if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-33
-        warning('Phase feature selected, but phase does not seem to exist. Ignoring phase %i feature.', i-33);
-        featureSelection(i) = 0;
+    if strcmp(solverName, 'tomlab')
+        if generalizedObj == 0 && featureSelection(i) == 1 && noOfPhasesInACycle < i-33
+            warning('Phase feature selected, but phase does not seem to exist. Ignoring phase %i feature.', i-33);
+            featureSelection(i) = 0;
+        end
+    elseif strcmp(solverName, 'cplex')
+        % do nothing.
+    else
+        error('Solver name not recognized.');
     end
 end
 

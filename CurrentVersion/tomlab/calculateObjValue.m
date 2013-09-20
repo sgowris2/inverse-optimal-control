@@ -1,10 +1,8 @@
-function [J] = J(x)
+function [JExpert] = calculateObjValue(ds,weights)
 
 persistent l;       % indexed by (link#, phase#)
 persistent t;       % indexed by (phase#)    
 persistent delta;   % indexed by (phase#)
-global ds;
-global weights;
 global phaseSequence;
 global noOfPhasesInACycle;
 global expertFlag;
@@ -12,14 +10,16 @@ global xExpertCombined;
 global featureSelection;
 global maxPhases;
 global maxLinks;
+global xIndex;
+global solverName;
 
 [noOfLinks, noOfPhasesInACycle, minPhaseLength, ...
 maxPhaseLength, noOfCycles, simTime, arrivalRate,...
 departureRate, lInitial, phaseSets, phaseSequence, zeroTimePhases] = unpackDataSet(ds);
 
+x = ds{xIndex};
 m = noOfLinks;
 n = noOfPhasesInACycle*noOfCycles;
-nc = noOfPhasesInACycle;
 cmax = noOfCycles;
 
 %alpha = createAlpha(m, noOfPhasesInACycle, arrivalRate, departureRate, phaseSets, noOfCycles, phaseSequence);
@@ -82,33 +82,36 @@ end
 jSizeTemp = numel(j);
 
 % Delay
-for i = 1:m
-    if featureSelection(1+maxPhases+2*maxLinks+i) == 1
-        j(i+jSizeTemp) = 0;
-        for k = 1
-            j(i+jSizeTemp) = j(i+jSizeTemp) + (x(delta(k))*(lInitial(i) + x(l(i,k))));
-        end
-        for k = 2:n
-            j(i+jSizeTemp) = j(i+jSizeTemp) + (x(delta(k))*(x(l(i,k-1)) + x(l(i,k))));
+if strcmp(solverName, 'tomlab')
+    for i = 1:m
+        if featureSelection(1+maxPhases+2*maxLinks+i) == 1
+            j(i+jSizeTemp) = 0;
+            for k = 1
+                j(i+jSizeTemp) = j(i+jSizeTemp) + (x(delta(k))*(lInitial(i) + x(l(i,k))));
+            end
+            for k = 2:n
+                j(i+jSizeTemp) = j(i+jSizeTemp) + (x(delta(k))*(x(l(i,k-1)) + x(l(i,k))));
+            end
         end
     end
+    jSizeTemp = numel(j);
+else
+    % do nothing
 end
-jSizeTemp = numel(j);
 
 % PhaseLength Error
-for p = 1:noOfPhasesInACycle
-    if featureSelection(1+maxPhases+3*maxLinks+p) == 1
-        j(p+jSizeTemp) = 0;
-        deltaPBarObserved = 0;
-        for c2 = 1:cmax
-            deltaPBarObserved = deltaPBarObserved + xExpertCombined(delta(noOfPhasesInACycle*(c2-1)+p));
+if strcmp(solverName, 'tomlab')
+    for p = 1:noOfPhasesInACycle
+        if featureSelection(1+maxPhases+3*maxLinks+p) == 1
+            j(p+jSizeTemp) = 0;
         end
-        deltaPBarObserved = deltaPBarObserved/cmax;
-        for c = 1:cmax
-            j(p+jSizeTemp) = j(p+jSizeTemp) + (x(delta(noOfPhasesInACycle*(c-1)+p)) - deltaPBarObserved)^2;
+    end
+elseif strcmp(solverName, 'cplex')
+     for p = 1:noOfPhasesInACycle
+        if featureSelection(1+maxPhases+2*maxLinks+p) == 1
+            j(p+jSizeTemp) = 0;
         end
     end
 end
 
-
-J = sum(weights .* j);
+JExpert = sum(weights .* j);

@@ -16,7 +16,7 @@ function [] = plotPerformanceMetrics(eobj, edelta, eq, er, ev, ep)
     legend('Individual experiment datapoints', 'Average');
     ylabel('Phase length error');
     xlabel('Experiment #');
-    title('Phase length errors');
+    title('Absolute percent error on phase lengths');
     
     figure;
     plot(eq,'s','MarkerSize',4);

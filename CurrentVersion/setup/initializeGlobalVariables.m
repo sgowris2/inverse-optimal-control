@@ -47,6 +47,8 @@ global expertFlag;
 global solverName;
 global maxPhases;
 global maxLinks;
+global bestDataSet;
+global bestEObj;
 
 numberOfIterations = 0;
 minWeight = 0.001;
