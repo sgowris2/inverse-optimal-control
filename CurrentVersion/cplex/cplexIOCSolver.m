@@ -1,18 +1,21 @@
-function [weights IOCResidual] = cplexIOCSolver(A,Aeq,d)
+function [weights IOCObj] = cplexIOCSolver(A,Aeq,d)
 
 global weightsSize;
 global minWeight;
 global generalizedObj;
 global featureSelectionIndex;
+global noOfDataSets;
 global noOfLinks;
 global xExpertCombined;
 global noOfCyclesIndex;
 global noOfPhasesInACycle;
-global rho1;
-global rho2;
+global r3;
+global r4;
 
-c = d{noOfCyclesIndex};
-n = c*noOfPhasesInACycle;
+for i = 1:noOfDataSets
+    c{i} = d{i}{noOfCyclesIndex};
+    n{i} = c{i}*noOfPhasesInACycle;
+end
 m = noOfLinks;
 
 %Define parameters for x here
@@ -25,7 +28,7 @@ xSize = weightsSize + lambdaSize + nuSize+ r1Size + r2Size; % There are 5 weight
 
 % Set up the optimization problem matrices
 
-[AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,rho1,rho2] = cplexGenerateIOCConstSet(m,n,c,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos);
+[AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,r3,r4] = cplexGenerateIOCConstSet(m,n,c,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos);
 [C,d] = cplexGenerateIOCvars(xSize,r1Size,r2Size,r1Pos,r2Pos);
 
 % Run cplex here.
@@ -66,7 +69,7 @@ for i = 1:weightsSize
 end
 % lambda(:,1) = x(lambdaPos(1):lambdaPos(lambdaSize));
 % nu(:,1) = x(nuPos(1):nuPos(nuSize));
-% IOCResiduals = C*x;
+% IOCObjs = C*x;
 fprintf('Residual 1: %f\n', norm(x(r1Pos)));
 fprintf('Residual 2: %f\n', norm(x(r2Pos)));
-IOCResidual = norm(x(r1Pos)) + norm(x(r2Pos));
+IOCObj = norm(x(r1Pos)) + norm(x(r2Pos));

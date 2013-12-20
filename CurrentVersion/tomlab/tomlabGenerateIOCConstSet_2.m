@@ -1,4 +1,4 @@
-function [AIOC,bLIOC,bUIOC,cLIOC,cUIOC,xLIOC,xUIOC] = tomlabGenerateIOCConstSet_2()
+function [FIOC, cIOC, AIOC,bLIOC,bUIOC,cLIOC,cUIOC,xLIOC,xUIOC] = tomlabGenerateIOCConstSet_2()
 
 global A;
 global bL;
@@ -12,6 +12,8 @@ global r2Size;
 global noOfLinks;
 global noOfPhasesInACycle;
 global weightsSize;
+global r3;
+global r4;
 
 r1Size = numel(xExpertCombined);
 r2Size = 1;
@@ -94,27 +96,34 @@ for l = 1:lambdaSize
     xLIOC(r1Size+r2Size+weightsSize+l) = 0;
 end
 
+eqNo = 0;
+ineqNo = 0;
+for i = 1:size(A,1)
+    if bL(i) == bU(i);
+        eqNo = eqNo + 1;
+        Aeq(eqNo,:) = A(i,:);
+        beq(eqNo,1) = bU(i);
+    else
+        ineqNo = ineqNo + 1;
+        Aineq(ineqNo,:) = A(i,:);
+        bineq(ineqNo,1) = bU(i);
+    end
+end
 
-% 
-% conNo = 1;
-% for i = 1:weightsSize
-%     AIOC(conNo,i) = 1;
-% end
-% bLIOC(conNo) = 1;
-% bUIOC(conNo) = 1;
-% conNo = conNo + 1;
-% 
-% AIOC(conNo,1) = 1;
-% bLIOC(conNo) = 0.0001;
-% bUIOC(conNo) = 1e99;
-% conNo = conNo + 1;
-% 
-% for i = 1:weightsSize
-%     xLIOC(i) = 0;
-% end
-% for i = 1:lambdaSize
-%     xLIOC(i + weightsSize) = 0;
-% end
-% 
-%     
-% 
+r3 = Aeq*xExpertCombined - beq;
+r4 = zeros(numel(xExpertCombined),1);
+const = Aineq*xExpertCombined - bineq;
+for i = 1:numel(r4)
+    if const(i) > 0
+        r4(i) = const(i);
+    else
+        r4(i) = 0;
+    end
+end
+
+FIOC = zeros(xIOCSize);
+for i = 1:r1Size+r2Size
+    FIOC(i,i) = 1;
+end
+
+cIOC = zeros(xIOCSize,1);

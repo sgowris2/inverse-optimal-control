@@ -1,9 +1,9 @@
-function [AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,rho1,rho2] = cplexGenerateIOCConstSet(m,n,noOfCycles,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos)
+function [AIOC,bIOC,AeqIOC,beqIOC,lbIOC,ubIOC,x0,r3,r4] = cplexGenerateIOCConstSet(m,n,noOfCycles,noOfPhasesInACycle,xSize,weightsSize,lambdaSize,nuSize,weightsPos,lambdaPos,nuPos,r1Pos,r2Pos)
 
 global minWeight;
-persistent l;       % indexed by (link#, phase#)
-persistent t;       % indexed by (phase#)    
-persistent delta;   % indexed by (phase#)
+persistent lCombined;       % indexed by (link#, phase#)
+persistent tCombined;       % indexed by (phase#)    
+persistent deltaCombined;   % indexed by (phase#)
 global A;
 global Aeq;
 global b;
@@ -11,16 +11,19 @@ global beq;
 global xExpertCombined;
 global noOfCyclesIndex;
 global featureSelectionIndex;
+global noOfDataSets;
 global phaseSequence;
 global mandatoryPhases;
 global zeroTimePhases;
 r1Size = numel(xExpertCombined);
 r2Size = 1;
 
-[l,t,delta] = xIndexing(m,n);    % Index l,t and delta within the vector x
+for i = 1:noOfDataSets
+    [lCombined,tCombined,deltaCombined] = xExpertCombinedIndexing(m,n);    % Index l,t and delta within the vector x
+end
 
 % Create A for ineq constraints
-% There are as many as lambdaSize + weightsSize ineuqality constraints.
+% There are as many as lambdaSize + weightsSize inequality constraints.
 AIOC = zeros(weightsSize+lambdaSize,xSize);
 AIOCSize = 1;
 for i = 1:weightsSize
@@ -40,19 +43,19 @@ bIOC(1) = -minWeight;
 
 % Create Aeq for equality constraints
 % Create Aeq for equality constraints
-AeqIOCSize = 1;
-AeqIOC = zeros(1+1+lambdaSize, xSize);
+AeqIOCIndex = 1;
+AeqIOC = zeros(1+1+r1Size, xSize);
 for j = 1:weightsSize
     AeqIOC(1,j) = 1;
 end
-AeqIOCSize = AeqIOCSize+1;
+AeqIOCIndex = AeqIOCIndex+1;
 
 r2ConstraintLHS = A*xExpertCombined - b;
 for j=1:lambdaSize
     AeqIOC(2,lambdaPos(j)) = r2ConstraintLHS(j);
     AeqIOC(2,r2Pos) = -1;
-    AeqIOCSize = AeqIOCSize+1;
 end
+AeqIOCIndex = AeqIOCIndex+1;
 
 % J{1} = objJ1_allQ(l,numel(xExpertCombined));
 % J{2} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
@@ -75,37 +78,50 @@ end
 % for i = 1:m
 %     [J{i+42} f{i+42}] = objJ_leftTurnPenalty(i,mandatoryPhases,l,numel(xExpertCombined),phaseSequence);
 % end
-
-J{1} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
-for i = 1:noOfPhasesInACycle
-    J{i+1} = objJ_phaseLength(i,zeroTimePhases,phaseSequence,delta,noOfCycles,numel(xExpertCombined));
-end
-for i = 1:m
-    [J{i+9} f{i+9}] = objJ_queueLengthL1(i,l,numel(xExpertCombined));
-end
-for i = 1:m
-    [J{i+17}]= objJ_queueLength(i,l,numel(xExpertCombined));
-end
-for i = 1:numel(phaseSequence)
-    [J{i+25} f{i+25}] = objJ_phaseAvgLength(i,xExpertCombined,phaseSequence,delta,numel(xExpertCombined));
+for d = 1:noOfDataSets
+    JTemp{1} = objJ2_cycleLength(deltaCombined{d},noOfCycles{d},noOfPhasesInACycle,numel(xExpertCombined));
+    for i = 1:noOfPhasesInACycle
+        JTemp{i+1} = objJ_phaseLength(i,zeroTimePhases,phaseSequence,deltaCombined{d},noOfCycles{d},numel(xExpertCombined));
+    end
+    for i = 1:m
+        [JTemp{i+9} fTemp{i+9}] = objJ_queueLengthL1(i,lCombined{d},numel(xExpertCombined));
+    end
+    for i = 1:m
+        [JTemp{i+17}]= objJ_queueLength(i,lCombined{d},numel(xExpertCombined));
+    end
+    for i = 1:numel(phaseSequence)
+        [JTemp{i+25} fTemp{i+25}] = objJ_phaseAvgLength(i,xExpertCombined,phaseSequence,deltaCombined{d},numel(xExpertCombined));
+    end
+    
+    if d == 1
+        J = JTemp;
+        f = fTemp;
+    else
+        for indexJ = 1:numel(J)
+            J{indexJ} = J{indexJ} + JTemp{indexJ};
+        end
+        for indexf = 1:numel(f)
+            f{indexf} = f{indexf} + fTemp{indexf};
+        end
+    end
 end
 
 for i=1:r1Size
     for j=1:weightsSize
         jIndex = find(featureSelectionIndex == j);
-        AeqIOC(AeqIOCSize,weightsPos(j)) = 2*J{jIndex}(i,:)*xExpertCombined;
+        AeqIOC(AeqIOCIndex,weightsPos(j)) = 2*J{jIndex}(i,:)*xExpertCombined;
         if numel(f{jIndex} > 1)
-            AeqIOC(AeqIOCSize,weightsPos(j)) = AeqIOC(AeqIOCSize,weightsPos(j)) + f{jIndex}(i);
+            AeqIOC(AeqIOCIndex,weightsPos(j)) = AeqIOC(AeqIOCIndex,weightsPos(j)) + f{jIndex}(i);
         end
     end
     for a=1:lambdaSize
-        AeqIOC(AeqIOCSize,lambdaPos(a)) = A(a,i);
+        AeqIOC(AeqIOCIndex,lambdaPos(a)) = A(a,i);
     end
     for aeq=1:nuSize
-        AeqIOC(AeqIOCSize,nuPos(aeq)) = Aeq(aeq,i);
+        AeqIOC(AeqIOCIndex,nuPos(aeq)) = Aeq(aeq,i);
     end
-    AeqIOC(AeqIOCSize, r1Pos(i)) = -1;
-    AeqIOCSize = AeqIOCSize+1;
+    AeqIOC(AeqIOCIndex, r1Pos(i)) = -1;
+    AeqIOCIndex = AeqIOCIndex+1;
 end
 
 % Create beq for equality constraints
@@ -127,13 +143,13 @@ x0 = zeros(xSize,1);
 %     x0(weightsSize + i) = rand(1,1);
 % end
 
-rho1 = Aeq*xExpertCombined - beq;
-rho2 = zeros(numel(xExpertCombined),1);
+r3 = Aeq*xExpertCombined - beq;
+r4 = zeros(numel(xExpertCombined),1);
 const = A*xExpertCombined - b;
-for i = 1:numel(rho2)
+for i = 1:numel(r4)
     if const(i) > 0
-        rho2(i) = const(i);
+        r4(i) = const(i);
     else
-        rho2(i) = 0;
+        r4(i) = 0;
     end
 end

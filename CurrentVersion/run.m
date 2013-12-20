@@ -4,10 +4,15 @@ t1 = tic;
 initializeGlobalVariables();
 addpath('C:\Program Files\IBM\ILOG\CPLEX_Studio1251\cplex\matlab\x64_win64');
 
+intersectionName = 'GreenFirst';
+
 experimentalData = 1;
-simulator = 0;
+noOfDataSets = 1;   % This is only used in the numerical inverse crime setting.
+                    % The experimental setup gets this value from the
+                    % number of strings in the filenames array in the file
+                    % selectIntersection.m
 noOfIterations = 1;
-solverName = 'tomlab'; % 'tomlab' or 'cplex'
+solverName = 'cplex'; % takes value 'tomlab' or 'cplex'
 
 cycleFeatures = 0;
 generalizedObj = 0;
@@ -19,46 +24,42 @@ selectIntersection();
 selectFeatures();
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-residualVector = zeros(noOfIterations,1);
-rho1Vector = zeros(noOfIterations,1);
-rho2Vector = zeros(noOfIterations,1);
     
 if experimentalData == 1
-    [DataSet] = initializeExperimentalDataSet(filenames);
+    [expertDataSet] = initializeExperimentalDataSet(filenames);
     checkFeatures();
     weightsSize = sum(featureSelection);
     createFeatureSelectionIndex();
     for iteration = 1:noOfIterations
-        [DataSet IOCResidual] = LearnWeights(DataSet,experimentalData,simulator);    %Returns updated DataSet with policy embedded
-        [agentDataSet] = simulateAgent(DataSet{1});
-        saveEmpiricalPerformanceMetrics(DataSet, agentDataSet, IOCResidual, rho1, rho2, iteration, experimentalData);
+        [expertDataSet IOCObj] = LearnWeights(expertDataSet,experimentalData);    %Returns updated DataSet with policy embedded
+        [agentDataSet] = simulateAgent(expertDataSet{1});
+        saveEmpiricalPerformanceMetrics(expertDataSet, agentDataSet, IOCObj, r3, r4, iteration);
     end
-    plotResidualsAndInfeasibility(eobj, edelta, eq, er, ev, ep);
-    printOutput(DataSet, agentDataSet, experimentalData);
-    visualize(DataSet, agentDataSet);
+    plotResidualsAndInfeasibility(eJ, edelta, eq, eo, ef, ep);
+    printOutput(expertDataSet, agentDataSet, experimentalData);
+    visualize(expertDataSet, agentDataSet);
+
 else
-    weightIndex = ones(1,sum(featureSelection));
-    
-    [DataSet] = initializeDataSet();
-    if simulator == 1
-        noOfIterations = 1;
-    end    
+    weightIndex = ones(1,sum(featureSelection));    
+    [expertDataSet] = initializeNumericalDataSet();
+     
     for iteration = 1:noOfIterations
         t2 = tic;
         checkFeatures();
         weightsSize = sum(featureSelection);
         createFeatureSelectionIndex();
         expertWeights = drawRandomWeights(weightIndex, featureSelectionIndex);
-        [DataSet IOCResidual] = LearnWeights(DataSet,experimentalData,simulator);    %Returns updated DataSet with policy embedded
-        [agentDataSet] = simulateAgent(DataSet{1});
-        saveEmpiricalPerformanceMetrics(DataSet, agentDataSet, IOCResidual, rho1, rho2, iteration, experimentalData);
+        %expertWeights = [0.0718    0.1913    0.0785    0.0236    0.1659    0.0828    0.0514    0.0859    0.0205    0.0281    0.2003];
+        [expertDataSet IOCObj] = LearnWeights(expertDataSet,experimentalData);    %Returns updated DataSet with policy embedded
+        [agentDataSet] = simulateAgent(expertDataSet{1});
+        saveEmpiricalPerformanceMetrics(expertDataSet, agentDataSet, IOCObj, r3, r4, iteration);
         if simulator == 1    
-            printOutput(DataSet, agentDataSet, experimentalData);
-            visualize(DataSet, agentDataSet);
+            printOutput(expertDataSet, agentDataSet, experimentalData);
+            visualize(expertDataSet, agentDataSet);
         end
         toc(t2);
     end
-    plotResidualsAndInfeasibility(eobj, edelta, eq, er, ev, ep);
+    plotResidualsAndInfeasibility(eJ, edelta, eq, eo, ef, ep);
 end
 
 toc(t1);
