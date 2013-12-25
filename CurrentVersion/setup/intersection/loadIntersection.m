@@ -21,6 +21,7 @@ switch intersectionName
         maneuvers{2} = [68523,68514,68533];
         lInitial{1} = [5 0 5 0];     % Initial queue lengths at each link
         lInitial{2} = [5 0 5 0];
+        lInitial{3} = lInitial{2};
         phaseSets{1} = [1,2];       % Contains the indices of the links that have a green in phase 1
         phaseSets{2} = [3,4];       % Contains the indices of the links that have a green in phase 2
         
@@ -34,7 +35,8 @@ switch intersectionName
         maneuvers{2} = [7,8,9];
         maneuvers{3} = [4,5,6];
         maneuvers{4} = [10,11,12];
-        lInitial{1} = [0 15 0 15];     % Initial queue lengths at each link
+        lInitial{1} = [0 7 0 7];     % Initial queue lengths at each link
+        lInitial{2} = [0 15 0 12];
         phaseSets{1} = [1,2];       % Contains the indices of the links that have a green in phase 1
         phaseSets{2} = [3,4];       % Contains the indices of the links that have a green in phase 2
     case 'SpringfieldFirst'

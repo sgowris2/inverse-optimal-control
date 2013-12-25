@@ -20,7 +20,7 @@ for d = 1:noOfDataSets
 %     plotObjectiveFunction(weights,agentDataSet{xIndex},'r');
     for j = 1:noOfLinks
         plotQueues(DataSet{d}, j, lInitial(j),separate);    % Plots the queue evolution and phase switches for link j in dataset d
-        plotQueues(agentDataSet, j, lInitial(j),overlay);                  
+        plotQueues(agentDataSet{d}, j, lInitial(j),overlay);                  
     end
-    plotPolicy(DataSet{d}, agentDataSet);
+    plotPolicy(DataSet{d}, agentDataSet{d});
 end

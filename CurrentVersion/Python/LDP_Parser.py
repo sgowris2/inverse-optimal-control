@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 
 def main():
-    counts, times = parseFile("VISSIM_CONVEX.ldp")
+    counts, times = parseFile("VISSIM_CONVEX_NEW.ldp")
     createCSV(counts, times, "SimulatedIntersection.csv")
 
 

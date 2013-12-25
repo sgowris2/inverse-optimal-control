@@ -27,11 +27,12 @@ for i = 1:noOfDataSets
     zeroTimePhases{i} = deduceZeroTimePhases(observedPhases{i}, phaseSequence);
     noOfCycles{i} = ((numel(observedPhases{i}) + numel(zeroTimePhases{i}))/numel(phaseSequence));
     agentSimTime{i} = 500;
-    arrivalRate{i} =  (0.2+0.1*rand(1,1))*ones(noOfLinks,(noOfCycles{i}*noOfPhasesInACycle));
+    %arrivalRate{i} =  (0.150*ones(noOfLinks,(noOfCycles{i}*noOfPhasesInACycle)));
+    arrivalRate{i} =  (0.3*rand(1,1))*ones(noOfLinks,(noOfCycles{i}*noOfPhasesInACycle));
     % for j = 1:numel(arrivalRate{1})
     %     arrivalRate{1}(j) = arrivalRate{1}(j)*rand(1,1);
     % end
-    departureRate{i} = 0.5*ones(noOfLinks,noOfPhasesInACycle);
+    departureRate{i} = 0.3*ones(noOfLinks, noOfPhasesInACycle);    
     lInitial{i} = 15*ones(1,noOfLinks);
     lInitial{i}(1) = 0;
     lInitial{i}(3) = 0;

@@ -45,8 +45,8 @@ else
 end
 fprintf('\nCalculated weights are (%.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f, %.3f).', weights);
 fprintf('\nPolicy for calculated weights is:\n|');
-fprintf('%.2f|', agentDataSet{policyIndex});
+fprintf('%.2f|', agentDataSet{1}{policyIndex});
 fprintf('\n');
-fprintf('\n2-norm error on the policy: %f percent\n', 100*(norm(DataSet{1}{policyIndex}(:) - agentDataSet{policyIndex}, 2))/DataSet{1}{simTimeIndex});
+fprintf('\n2-norm error on the policy: %f percent\n', 100*(norm(DataSet{1}{policyIndex}(:) - agentDataSet{1}{policyIndex}, 2))/DataSet{1}{simTimeIndex});
 fprintf('\nr3: %f', norm(r3));
 fprintf('\nr4: %f', norm(r4));
