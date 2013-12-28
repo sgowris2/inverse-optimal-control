@@ -22,7 +22,7 @@ m = noOfLinks;
 lambdaSize = size(A, 1);
 nuSize = size(Aeq, 1);
 r1Size = numel(xExpertCombined);
-r2Size = 1;
+r2Size = lambdaSize;
 xSize = weightsSize + lambdaSize + nuSize+ r1Size + r2Size; % There are 5 weights, 2*iMax*n + 2*n lambdas, and n+1 nu's.
 [weightsPos,lambdaPos,nuPos,r1Pos,r2Pos] = xIOCIndexing(weightsSize,lambdaSize,nuSize,r1Size);
 

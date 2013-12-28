@@ -17,7 +17,7 @@ for i=1:r1Size
     r1Pos(i) = xPos;
     xPos = xPos+1;
 end
-for i=1:1
+for i=1:lambdaSize
     r2Pos(i) = xPos;
     xPos = xPos+1;
 end

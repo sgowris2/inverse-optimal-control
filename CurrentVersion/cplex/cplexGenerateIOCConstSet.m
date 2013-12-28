@@ -44,7 +44,7 @@ bIOC(1) = -minWeight;
 % Create Aeq for equality constraints
 % Create Aeq for equality constraints
 AeqIOCIndex = 1;
-AeqIOC = zeros(1+1+r1Size, xSize);
+AeqIOC = zeros(1+r1Size+r2Size, xSize);
 for j = 1:weightsSize
     AeqIOC(1,j) = 1;
 end
@@ -52,10 +52,11 @@ AeqIOCIndex = AeqIOCIndex+1;
 
 r2ConstraintLHS = A*xExpertCombined - b;
 for j=1:lambdaSize
-    AeqIOC(2,lambdaPos(j)) = r2ConstraintLHS(j);
-    AeqIOC(2,r2Pos) = -1;
+    AeqIOC(1+j,lambdaPos(j)) = r2ConstraintLHS(j);
+    AeqIOC(1+j,r2Pos(j)) = -1;
+    AeqIOCIndex = AeqIOCIndex+1;
 end
-AeqIOCIndex = AeqIOCIndex+1;
+
 
 % J{1} = objJ1_allQ(l,numel(xExpertCombined));
 % J{2} = objJ2_cycleLength(delta,noOfCycles,noOfPhasesInACycle,numel(xExpertCombined));
