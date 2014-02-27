@@ -39,7 +39,7 @@ else
     ew(expNo) = norm((expertWeights - weights),1);
 end
 
-eJ(expNo) = 100*((norm(expertDataSet{1}{objIndex} - agentObj))/(norm(expertDataSet{1}{objIndex})));
+eJ(expNo) = 100*((norm(expertDataSet{1}{objIndex} - agentObj))/(agentObj));
 eo(expNo) = (IOCObj)/(numel(xExpertCombined)+1);
 ef(expNo) = (norm(r3) + norm(r4))/(size(A,1)+size(Aeq,1));
 ep(expNo) = 100*((norm(expertDataSet{1}{policyIndex}(:) - agentDataSet{1}{policyIndex}, 2)/expertDataSet{1}{simTimeIndex}));
